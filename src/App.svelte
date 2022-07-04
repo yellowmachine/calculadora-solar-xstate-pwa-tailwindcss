@@ -4,19 +4,20 @@
   import { matchesState } from 'xstate';
   import Counter from './lib/Counter.svelte'
   import ReloadPrompt from './lib/ReloadPrompt.svelte'
+  import Mapa from './lib/Mapa.svelte';
+  import data from './lib/form.js';
+
+  let latlng={lat: $data.lat, lng: $data.lng}
 
   const {state, send} = useMachine(m);
 </script>
 
 <main>
-  {#if matchesState('home', state)}
+  {#if matchesState('home', $state.value)}
     <img src="/favicon.svg" alt="PWA Logo" width="60" height="60"/>
-    <h1>Hello world!!!</h1>
-
+    <Mapa {latlng} />
     <button class="btn btn-warning">Warning</button>
-
     <Counter />
-
     <p>
       Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
       apps.

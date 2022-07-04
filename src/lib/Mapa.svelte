@@ -26,7 +26,7 @@
   </script>
   
   <div class="example">
-	<LeafletMap bind:this={MAP_EL} events={['click']}  on:click={(ev) => latlng = ev.detail.latlng} options={mapOptions}>
+	<LeafletMap bind:this={MAP_EL} events={['click']} on:click={(ev) => latlng = ev.detail.latlng} options={mapOptions}>
 		<TileLayer url={tileUrl} options={tileLayerOptions}/>
 		<Marker latLng={[latlng.lat, latlng.lng]}/>
 	</LeafletMap>
