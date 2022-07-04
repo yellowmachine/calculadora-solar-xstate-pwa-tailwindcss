@@ -1,7 +1,8 @@
 import { createMachine, assign, actions } from 'xstate';
+import { getRadiation } from './lib/radiation';
 
 const { log, cancel, send } = actions;
-// Action to increment the context amount
+
 const addWater = assign({
   buffer: () => [],
   current: (context) => {
@@ -10,8 +11,9 @@ const addWater = assign({
 });
 
 const fetch = async (context, event) => {
-  console.log('en fetch', context, event)
-  return {data: 321} 
+  const {lat, lng, azimut, angle} = event;
+  console.log('fetching', {lat, lng, azimut, angle})
+  return await getRadiation({lat, lng, azimut, angle})
 }
 
 const pushBuffer = assign((context, event)=>{
@@ -40,6 +42,7 @@ export default createMachine(
         initial: 'initial',
         states: {
           radiationDone: {
+            entry: log(),
             on: {
                 TYPE: {
                     target: 'debouncing',
@@ -48,6 +51,7 @@ export default createMachine(
             }
           },
           error: {
+            entry: log(),
             on: {
                 TYPE: {
                     target: 'debouncing',
@@ -56,6 +60,7 @@ export default createMachine(
             }
           },
           fetching: {
+            entry: log(),
             on:{
                 TYPE: {
                     internal: true,
@@ -75,6 +80,7 @@ export default createMachine(
           },
           debouncing: {
             entry: [
+                log(),
                 cancel('debouncing'),
                 send("FETCH", {
                     delay: 1000,

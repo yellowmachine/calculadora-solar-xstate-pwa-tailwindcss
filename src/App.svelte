@@ -8,8 +8,25 @@
   import data from './lib/form.js';
 
   let latlng={lat: $data.lat, lng: $data.lng}
+  let azimut = 0.0;
+  let angle = 0.0;
 
   const {state, send} = useMachine(m);
+
+  function isLatitude(v){
+    return -90.0 <= v && v <= 90.0
+  }
+
+  function isLongitude(v){
+    return -180.0 <= v && v <= 180.0
+  }
+
+  function isLatLng({lat, lng, azimut, angle}){
+    return isLatitude(lat) && isLongitude(lng) //isAzimut(azimut)  isAngle(angle)
+  }
+
+  $: if(isLatLng({...latlng, azimut, angle})) send('TYPE', {...latlng, azimut, angle})
+
 </script>
 
 <main>
@@ -17,21 +34,11 @@
     <img src="/favicon.svg" alt="PWA Logo" width="60" height="60"/>
     <Mapa {latlng} />
     <button class="btn btn-warning">Warning</button>
-    <Counter />
-    <p>
-      Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-      apps.
-    </p>
-
-    <p>
-      Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-      the officially supported framework, also powered by Vite!
-    </p>
   {/if}
   
 </main>
 
-<div> ... (3)</div>
+<div> ... (4)</div>
 
 <ReloadPrompt />
 
