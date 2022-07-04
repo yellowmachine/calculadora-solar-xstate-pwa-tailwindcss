@@ -1,0 +1,31 @@
+{
+  "name": "svelte-pwa-xstate-tailwind",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "svelte": "^3.44.0",
+    "tailwindcss": "^3.1.4",
+    "vite": "^2.9.9",
+    "vite-plugin-pwa": "^0.12.2",
+    "workbox-core": "^6.5.3",
+    "workbox-precaching": "^6.5.3",
+    "workbox-routing": "^6.5.3",
+    "workbox-window": "^6.5.3"
+  },
+  "dependencies": {
+    "@xstate/svelte": "^2.0.0",
+    "daisyui": "^2.18.0",
+    "leaflet": "^1.8.0",
+    "svelte-leafletjs": "^0.9.0",
+    "xstate": "^4.32.1"
+  }
+}
