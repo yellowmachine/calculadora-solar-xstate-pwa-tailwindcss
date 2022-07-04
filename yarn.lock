@@ -2602,6 +2602,11 @@ svelte-leafletjs@^0.9.0:
     axios "^0.25.0"
     leaflet "^1.7.1"
 
+svelte-popperjs@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/svelte-popperjs/-/svelte-popperjs-1.2.10.tgz#d78d694bde0508c61d52415d2a02db6024bb5952"
+  integrity sha512-3jetqQh8q+n2497M397IN2UaiOhCY/sLpH01FSaH+XGi649QDmVWJPNxS/PxSGadoHb+teY/tMAh2YhzT7+vVw==
+
 svelte@^3.44.0:
   version "3.48.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.48.0.tgz#f98c866d45e155bad8e1e88f15f9c03cd28753d3"

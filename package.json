@@ -28,6 +28,7 @@
     "felte": "^1.2.2",
     "leaflet": "^1.8.0",
     "svelte-leafletjs": "^0.9.0",
+    "svelte-popperjs": "^1.2.10",
     "xstate": "^4.32.1"
   }
 }
