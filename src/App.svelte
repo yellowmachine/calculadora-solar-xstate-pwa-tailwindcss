@@ -1,11 +1,15 @@
 <script>
-   import m from './machine';
+  import m from './lib/machine';
   import { useMachine } from '@xstate/svelte';
   import { matchesState } from 'xstate';
-  import Counter from './lib/Counter.svelte'
   import ReloadPrompt from './lib/ReloadPrompt.svelte'
   import Mapa from './lib/Mapa.svelte';
   import data from './lib/form.js';
+
+  import HStack from './lib/HStack.svelte';
+  //import VStack from './lib/VStack.svelte';
+  import UserInput from './lib/UserInput.svelte';
+  import Input from './lib/Input.svelte'
 
   let latlng={lat: $data.lat, lng: $data.lng}
   let azimut = 0.0;
@@ -25,6 +29,11 @@
     return isLatitude(lat) && isLongitude(lng) //isAzimut(azimut)  isAngle(angle)
   }
 
+  function handleGo(){
+    if(isLatitude($data.lat) && isLongitude($data.lng))
+      latlng = {lat: $data.lat, lng: $data.lng}
+  }
+
   $: if(isLatLng({...latlng, azimut, angle})) send('TYPE', {...latlng, azimut, angle})
 
 </script>
@@ -32,13 +41,37 @@
 <main>
   {#if matchesState('home', $state.value)}
     <img src="/favicon.svg" alt="PWA Logo" width="60" height="60"/>
-    <Mapa {latlng} />
-    <button class="btn btn-warning">Warning</button>
+    {#if matchesState({home: 'fetching'}, $state.value)}
+      <button disabled class="btn btn-warning">Fetching</button> 
+    {:else if matchesState({home: 'radiationDone'}, $state.value)}
+      <button class="btn btn-accent">Ya puedes calcular!</button>
+    {/if}
   {/if}
-  
-</main>
 
-<div> ... (4)</div>
+  <div class="grid grid-cols-1 place-items-center">
+    <HStack>
+      <div>
+        <Input bind:value={$data.lat} variant="" label="Latitud">
+            My tooltip
+        </Input>
+      </div>
+      <div>
+        <button on:click={handleGo} class="btn btn-warning" disabled={!isLatitude($data.lat) || !isLongitude($data.lng)}>Ir</button>
+      </div>
+      <div>
+        <Input bind:value={$data.lng} variant="warning" label="Longitud" />
+      </div>
+    </HStack>
+  
+    <HStack>
+      <UserInput bind:azimut bind:angle>
+        <Mapa bind:latlng />
+      </UserInput>
+    </HStack>
+  
+  </div>
+
+</main>
 
 <ReloadPrompt />
 

@@ -3,16 +3,14 @@ import { getRadiation } from './lib/radiation';
 
 const { log, cancel, send } = actions;
 
-const addWater = assign({
+const cleanBufferAndSetCurrent = assign({
   buffer: () => [],
-  current: (context) => {
-    return context.buffer.at(-1)
-  }
+  current: (context) => context.buffer.at(-1)
 });
 
 const fetch = async (context, event) => {
   const {lat, lng, azimut, angle} = event;
-  console.log('fetching', {lat, lng, azimut, angle})
+  console.log('fetching', event, {lat, lng, azimut, angle})
   return await getRadiation({lat, lng, azimut, angle})
 }
 
@@ -29,33 +27,48 @@ export default createMachine(
     initial: 'home',
     context: {
         current: null,
-        buffer: [{
-            latitude: 0,
-            longitude: 0
-        }],
+        buffer: [],
         radiation_result: null,
         result: null,
-        errors: [""]
+        error: ""
     },
     states: {
       home: {
         initial: 'initial',
+        on: {
+          CALCULATE: 'results'
+        },
         states: {
-          radiationDone: {
+          initial: {
             entry: log(),
             on: {
                 TYPE: {
                     target: 'debouncing',
                     actions: "pushBuffer"
                 }
-            }
+            },
+            always: {
+                cond: "isBuffer",
+                target: "debouncing"
+            },
           },
-          error: {
-            entry: log(),
+          debouncing: {
+            entry: [
+                log(),
+                cancel('debouncing'),
+                send("FETCH", {
+                    delay: 1000,
+                    id: "debouncing"
+                })
+            ],
             on: {
                 TYPE: {
                     target: 'debouncing',
                     actions: "pushBuffer"
+                },
+                FETCH: {
+                    actions: "cleanBufferAndSetCurrent",
+                    target: 'fetching'
                 }
             }
           },
@@ -74,50 +87,36 @@ export default createMachine(
                 target: 'radiationDone'
               },
               onError: {
+                actions: assign({error: (_, event) => "Error en invoke fetch radiation: " + JSON.stringify(event)})
                 target: 'error'
               }
             }
           },
-          debouncing: {
-            entry: [
-                log(),
-                cancel('debouncing'),
-                send("FETCH", {
-                    delay: 1000,
-                    id: "debouncing"
-                })
-            ],
-            on: {
-                TYPE: {
-                    target: 'debouncing',
-                    actions: "pushBuffer"
-                },
-                FETCH: {
-                    actions: "addWater",
-                    target: 'fetching'
-                }
-            }
-          },  
-          initial: {
+          radiationDone: {
             entry: log(),
             on: {
                 TYPE: {
                     target: 'debouncing',
                     actions: "pushBuffer"
                 }
-            },
-            always: {
-                cond: "isBuffer",
-                target: "debouncing"
-            },
+            }
           },
+          error: {
+            entry: log(),
+            on: {
+                TYPE: {
+                    target: 'debouncing',
+                    actions: "pushBuffer"
+                }
+            }
+          }
         }
       },
       results: {}
     }
   },
   {
-    actions: { addWater, pushBuffer },
+    actions: { cleanBufferAndSetCurrent, pushBuffer },
     guards: { isBuffer }
   }
 );

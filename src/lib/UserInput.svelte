@@ -10,11 +10,14 @@ import FileDropZone from './FileDropZone.svelte';
 import { validator } from '@felte/validator-vest';
 import suite from './suite.UserInput';
 import RInput from './Input.svelte';
+import m from './machine';
+import { useMachine } from '@xstate/svelte';
 import { matchesState } from 'xstate';
 
-export let state;
 export let azimut;
 export let angle;
+
+const { state, send } = useMachine(m);
 
 let csv;
 
@@ -157,7 +160,7 @@ function errorsByKeys(e, keys){
 
     <div class="mb-2 mt-2 grid grid-cols-1 place-items-center">
       {#if matchesState({home: 'radiationDone'}, $state.value)}
-          <button class="btn btn-secondary" type="submit">Calcular</button>
+          <button on:click={()=>send('CALCULATE')} class="btn btn-secondary" type="submit">Ya puedes calcular</button>
       {:else if matchesState({home: 'idle'}, $state.value)}
           <div>Se necesita calcular la radiación</div>
       {:else if matchesState({home: 'error'}, $state.value)}
