@@ -23,12 +23,14 @@
   },
   "dependencies": {
     "@felte/validator-vest": "^1.0.9",
+    "@popperjs/core": "^2.11.5",
     "@xstate/svelte": "^2.0.0",
     "daisyui": "^2.18.0",
     "felte": "^1.2.2",
     "leaflet": "^1.8.0",
     "svelte-leafletjs": "^0.9.0",
     "svelte-popperjs": "^1.2.10",
+    "vest": "^4.4.2",
     "xstate": "^4.32.1"
   }
 }

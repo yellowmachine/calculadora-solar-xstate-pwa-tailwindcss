@@ -87,7 +87,7 @@ export default createMachine(
                 target: 'radiationDone'
               },
               onError: {
-                actions: assign({error: (_, event) => "Error en invoke fetch radiation: " + JSON.stringify(event)})
+                actions: assign({error: (_, event) => "Error en invoke fetch radiation: " + JSON.stringify(event)}),
                 target: 'error'
               }
             }
